@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Edit book</title>
+</head>
+<body>
+<div class="jumbotron">
+    <h2>Add a new Book !!</h2>
+    <form action="#"
+          th:action="@{/update/{id}(id=${book.id})}"
+          th:object="${book}"
+          method="post">
+        <label for="title">Title</label>
+        <input type="text" name="title" th:field="*{title}" id="title" placeholder="Title">
+        <label for="author">Author</label>
+        <input type="text" th:field="*{author}" id="author" placeholder="Author">
+        <label for="quantity">Quantity</label>
+        <input type="text" th:field="*{quantity}" id="quantity" placeholder="Quantity">
+        <label for="genre">Genre</label>
+        <input type="text" th:field="*{genre}" id="genre" placeholder="Genre">
+        <input type="submit" value="Update Book">
+    </form>
+</div>
+</body>
+</html>
