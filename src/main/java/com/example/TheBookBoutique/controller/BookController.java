@@ -3,18 +3,13 @@ package com.example.TheBookBoutique.controller;
 import com.example.TheBookBoutique.model.Book;
 import com.example.TheBookBoutique.model.BookEdit;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bson.json.JsonObject;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 public class BookController {
@@ -44,6 +39,16 @@ public class BookController {
         model.addAttribute("books",manageBooks(null));
         model.addAttribute("book",new Book());
         return "books_page";
+    }
+    @PostMapping("/search/book")
+    public String searchBook(@RequestParam(required=false) String title){
+        System.out.println("titttle =="+title);
+        //uri here example: "http://localhost:8090/books/create"
+        final String uri ="";
+        //RestTemplate restTemplate = new RestTemplate();
+        //restTemplate.postForObject(uri, title, String.class);
+        return "redirect:/books";
+
     }
     @PostMapping("createBook")
     public String createBook(@ModelAttribute Book book,BindingResult result){
