@@ -40,14 +40,23 @@ public class BookController {
         model.addAttribute("book",new Book());
         return "books_page";
     }
-    @PostMapping("/search/book")
+    @GetMapping("/search/book")
     public String searchBook(@RequestParam(required=false) String title){
         System.out.println("titttle =="+title);
         //uri here example: "http://localhost:8090/books/create"
-        final String uri ="";
-        //RestTemplate restTemplate = new RestTemplate();
-        //restTemplate.postForObject(uri, title, String.class);
-        return "redirect:/books";
+      /*  final String uri ="";
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Object[]> responseEntity =
+                restTemplate.getForEntity(uri, Object[].class);
+        Object[] objects = responseEntity.getBody();
+        ObjectMapper mapper = new ObjectMapper();
+        List<Book> list = new ArrayList<Book>();
+        books=new HashSet<>();
+        for (Object o : objects) {
+            Book book = mapper.convertValue(o, Book.class);
+            books.add(book);
+        }*/
+        return "search_result.html";
 
     }
     @PostMapping("createBook")
