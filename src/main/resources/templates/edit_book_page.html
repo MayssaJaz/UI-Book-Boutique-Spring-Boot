@@ -13,14 +13,17 @@
           th:object="${book}"
           method="post">
         <label for="title">Title</label>
-        <input type="text" name="title" th:field="*{title}" id="title" placeholder="Title">
+        <input type="text" class="form-control" name="title" th:field="*{title}" id="title" placeholder="Title">
         <label for="author">Author</label>
-        <input type="text" th:field="*{author}" id="author" placeholder="Author">
+        <input type="text" class="form-control" th:field="*{author}" id="author" placeholder="Author">
         <label for="quantity">Quantity</label>
-        <input type="text" th:field="*{quantity}" id="quantity" placeholder="Quantity">
+        <input type="text" class="form-control" th:field="*{quantity}" id="quantity" placeholder="Quantity">
         <label for="genre">Genre</label>
-        <input type="text" th:field="*{genre}" id="genre" placeholder="Genre">
-        <input type="submit" value="Update Book">
+        <input type="text" class="form-control" th:field="*{genre}" id="genre" placeholder="Genre">
+        <br>
+        <button class="btn btn-success" type="submit">
+            Update Book
+        </button>
     </form>
 </div>
 </body>

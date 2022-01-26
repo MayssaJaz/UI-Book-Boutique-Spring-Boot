@@ -1,12 +1,20 @@
 package com.example.TheBookBoutique.controller;
 
 import com.example.TheBookBoutique.model.Book;
+import com.example.TheBookBoutique.model.BookEdit;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.bson.json.JsonObject;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import java.util.HashSet;
-import java.util.Set;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class BookController {
@@ -17,10 +25,18 @@ public class BookController {
         return books;
     }
     private static Set<Book> init(){
-
-        books.add(new Book(1,"MA","LA",4,"romance"));
-        books.add(new Book(2,"MA","LA",4,"horror"));
-        books.add(new Book(4,"MA","LA",4,"adventure"));
+        books=new HashSet<>();
+        final String uri = "http://localhost:8090/books";
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Object[]> responseEntity =
+                restTemplate.getForEntity(uri, Object[].class);
+        Object[] objects = responseEntity.getBody();
+        ObjectMapper mapper = new ObjectMapper();
+        List<Book> list = new ArrayList<Book>();
+        for (Object o : objects) {
+            Book book = mapper.convertValue(o, Book.class);
+            books.add(book);
+        }
         return books;
     }
     @GetMapping("/books")
@@ -30,16 +46,21 @@ public class BookController {
         return "books_page";
     }
     @PostMapping("createBook")
-    public String createBook(@ModelAttribute Book book){
-        System.out.println("book ="+ book);
-        //call API here
+    public String createBook(@ModelAttribute Book book,BindingResult result){
+        if (result.hasErrors()) {
+            return "redirect:/books";
+        }
+        final String uri = "http://localhost:8090/books/create";
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.postForObject(uri, book, Book.class);
         return "redirect:/books";
+
     }
     @RequestMapping(value = "/deleteBook", method = RequestMethod.GET)
     public String handleDeleteBook(@RequestParam(name="bookId") String bookId) {
-        System.out.println(bookId);
-        System.out.println("test");
-        //call API here
+        final String uri = "http://localhost:8090/books/delete";
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete(uri+"/"+bookId);
         return "redirect:/books";
     }
     @GetMapping("/edit/{id}")
@@ -56,11 +77,15 @@ public class BookController {
             book.setId(id);
             return "edit_book_page";
         }
+        final String uri = "http://localhost:8090/books/update";
         Book bookEdit=(Book) model.getAttribute("book");
         String title=bookEdit.getTitle();
-        System.out.println("titleeee"+title);
-
-        //call API here
+        String author=bookEdit.getAuthor();
+        int quantity=bookEdit.getQuantity();
+        String genre=bookEdit.getGenre();
+        BookEdit editedBook=new BookEdit(title,author,quantity,genre);
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.put(uri+"/"+id, editedBook,BookEdit.class);
         return "redirect:/books";
     }
 
